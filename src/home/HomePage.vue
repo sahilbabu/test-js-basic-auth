@@ -378,7 +378,6 @@
         },
         created() {
             this.user = JSON.parse(localStorage.getItem('user'));
-            console.log(this.user);
             this.users.loading = true;
             userService.getAll().then(users => this.users = users);
 
@@ -393,7 +392,6 @@
                 }
             })
                 .then((response) => {
-                    console.log(response.data.managedObjects);
                     this.statistics = response.data.statistics;
                     this.items = response.data.managedObjects;
                 })
