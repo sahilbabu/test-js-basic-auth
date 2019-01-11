@@ -462,7 +462,6 @@
 
         methods: {
             deviceDetailModal(index) {
-                //console.log('>>>>>>>:'+this.items[index].name);
                 this.deviceDetail = this.items[index];
                 $('#deviceDeatilModel').modal('show');
             }
