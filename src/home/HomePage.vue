@@ -3,10 +3,10 @@
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-                <a class="navbar-brand brand-logo" href="index.html">
+                <a class="navbar-brand brand-logo" href="#">
                     <img src="/admin/images/logo.svg" alt="logo"/>
                 </a>
-                <a class="navbar-brand brand-logo-mini" href="index.html">
+                <a class="navbar-brand brand-logo-mini" href="#">
                     <img src="/admin/images/logo-mini.svg" alt="logo"/>
                 </a>
             </div>
@@ -205,7 +205,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="">
                             <i class="menu-icon mdi mdi-television"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -293,6 +293,8 @@
                         </div>
                     </div>
 
+                    <!-- Button trigger modal -->
+
                     <div class="row">
                         <div class="col-lg-12 grid-margin">
                             <div class="card">
@@ -314,19 +316,11 @@
                                             </thead>
                                             <tbody>
 
-                                            <tr v-for="(item, index) in items">
-                                                <td class="font-weight-medium">
-                                                    {{ item.id }}
-                                                </td>
-                                                <td>
-                                                    {{ item.lastUpdated }}
-                                                </td>
-                                                <td>
-                                                    {{ item.name }}
-                                                </td>
-                                                <td>
-                                                    {{ item.owner }}
-                                                </td>
+                                            <tr class="tr-row" v-for="(item, index) in items" :id="index" @click="deviceDetailModal(index)" data-toggle="tooltip" data-placement="top" title="Click to view device detail">
+                                                <td class="font-weight-medium">{{ item.id }}</td>
+                                                <td>{{ item.lastUpdated }}</td>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.owner }}</td>
                                                 <td>{{ item.type }}</td>
                                                 <td>
                                                     <span v-for="(firmware, f) in item.c8y_Firmware">{{f}}: {{firmware}}, </span>
@@ -341,6 +335,71 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="deviceDeatilModel" tabindex="-1" role="dialog" aria-labelledby="deviceDeatilModelTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Device detail[ {{deviceDetail.name}} ]</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-unstyled">
+                                        <li><b>Firmware:</b>
+                                            <ul>
+                                                <li v-for="(firmware, f) in deviceDetail.c8y_Firmware"><b>{{f}}:</b> {{firmware}}</li>
+                                                <li v-if="!deviceDetail.c8y_Firmware">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Hardware:</b>
+                                            <ul>
+                                                <li v-for="(hardware, h) in deviceDetail.c8y_Hardware"><b>{{h}}:</b> {{hardware}}</li>
+                                                <li v-if="!deviceDetail.c8y_Hardware">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Software:</b>
+                                            <ul>
+                                                <li v-for="(software, s) in deviceDetail.c8y_Software"><b>{{s}}:</b> {{software}}</li>
+                                                <li v-if="!deviceDetail.c8y_Software">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Mobile:</b>
+                                            <ul>
+                                                <li v-for="(mobile, m) in deviceDetail.c8y_Mobile"><b>{{m}}:</b> {{mobile}}</li>
+                                                <li v-if="!deviceDetail.c8y_Mobile">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Geofence:</b>
+                                            <ul>
+                                                <li v-for="(geofence, g) in deviceDetail.c8y_Geofence"><b>{{g}}:</b> {{geofence}}</li>
+                                                <li v-if="!deviceDetail.c8y_Geofence">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Position:</b>
+                                            <ul>
+                                                <li v-for="(position, p) in deviceDetail.c8y_Position"><b>{{p}}:</b> {{position}}</li>
+                                                <li v-if="!deviceDetail.c8y_Position">Empty </li>
+                                            </ul>
+                                        </li>
+                                        <li><b>Connection:</b>
+                                            <ul>
+                                                <li v-for="(connection, c) in deviceDetail.c8y_Connection"><b>{{c}}:</b> {{connection}}</li>
+                                                <li v-if="!deviceDetail.c8y_Connection">Empty </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./Modal -->
 
                 </div>
                 <!-- content-wrapper ends -->
@@ -374,6 +433,7 @@
                 users: [],
                 items: [],
                 statistics: [],
+                deviceDetail: [],
             }
         },
         created() {
@@ -398,6 +458,24 @@
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+
+        methods: {
+            deviceDetailModal(index) {
+                //console.log('>>>>>>>:'+this.items[index].name);
+                this.deviceDetail = this.items[index];
+                $('#deviceDeatilModel').modal('show');
+            }
         }
     };
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
+
+<style>
+    .tr-row{
+        cursor: pointer;
+    }
+</style>
