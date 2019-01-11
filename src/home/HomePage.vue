@@ -308,7 +308,7 @@
                                             <tr>
                                                 <th>id</th>
                                                 <th>lastUpdated</th>
-                                                <th>lastUpdated</th>
+                                                <th>name</th>
                                                 <th>owner</th>
                                                 <th>type</th>
                                                 <th>c8y_Firmware</th>
